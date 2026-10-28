@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Expense Tracker</title>
+
+    <link rel="stylesheet" href="expense.css">
+    <script src="expense.js" defer></script>
+</head>
+
+<body>
+
+    <div class="app-shell">
+
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">PERSONAL FINANCE</p>
+                <h1>Expense Tracker</h1>
+                <p class="subtitle">
+                    Know where your money goes. Plan what comes next.
+                </p>
+            </div>
+
+            <button id="exportButton" class="button button-secondary" type="button">
+                Export CSV
+            </button>
+        </header>
+
+        <main>
+            <section class="summary-grid" aria-label="Overall summary">
+
+                <article class="summary-card balance-card">
+                    <p>Total balance</p>
+                    <h2 id="balance">$0.00</h2>
+                    <span>All recorded transactions</span>
+                </article>
+
+                <article class="summary-card income-card">
+                    <p>Total income</p>
+                    <h2 id="income">$0.00</h2>
+                    <span>Money received</span>
+                </article>
+
+                <article class="summary-card expense-card">
+                    <p>Total expenses</p>
+                    <h2 id="expenses">$0.00</h2>
+                    <span>Money spent</span>
+                </article>
+
+            </section>
+            <section class="panel">
+
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">TRANSACTIONS</p>
+                        <h2 id="formHeading">Add a transaction</h2>
+                    </div>
+
+                    <p class="helper-text">Fields marked * are required.</p>
+                </div>
+
+                <form id="transactionForm">
+
+                    <div class="form-grid">
+
+                        <label class="field field-wide" for="description">
+                            Description *
+
+                            <input id="description" name="description" type="text" maxlength="120"
+                                placeholder="e.g. Groceries" required>
+                        </label>
+
+                        <label class="field" for="amount">
+                            Amount *
+
+                            <input id="amount" name="amount" type="number" min="0.01" step="0.01" placeholder="0.00"
+                                required>
+                        </label>
+
+                        <label class="field" for="type">
+                            Transaction type *
+
+                            <select id="type" name="type" required>
+                                <option value="expense" selected>Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </label>
+
+                        <label class="field" for="category">
+                            Category *
+
+                            <select id="category" name="category" required></select>
+                        </label>
+
+                        <label class="field" for="transactionDate">
+                            Date *
+
+                            <input id="transactionDate" name="transactionDate" type="date" required>
+                        </label>
+
+                    </div>
+
+                    <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+
+                    <div class="form-actions">
+
+                        <button id="submitButton" class="button button-primary" type="submit">
+                            Add transaction
+                        </button>
+
+                        <button id="cancelEditButton" class="button button-quiet hidden" type="button">
+                            Cancel edit
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </section>
+            <section class="panel">
+
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">MONTHLY OVERVIEW</p>
+                        <h2>Reports and charts</h2>
+
+                        <p class="section-description">
+                            Compare income, expenses, and spending categories for a selected month.
+                        </p>
+                    </div>
+
+                    <label class="field month-picker" for="reportMonth">
+                        Report month
+
+                        <input id="reportMonth" type="month">
+                    </label>
+                </div>
+
+                <div class="monthly-summary-grid">
+
+                    <article class="mini-stat">
+                        <span>Monthly income</span>
+                        <strong id="monthlyIncome">$0.00</strong>
+                    </article>
+
+                    <article class="mini-stat">
+                        <span>Monthly expenses</span>
+                        <strong id="monthlyExpenses">$0.00</strong>
+                    </article>
+
+                    <article class="mini-stat">
+                        <span>Monthly balance</span>
+                        <strong id="monthlyBalance">$0.00</strong>
+                    </article>
+
+                </div>
+
+                <div class="charts-grid">
+
+                    <article class="chart-card">
+
+                        <div class="chart-heading">
+                            <h3>Income vs. expenses</h3>
+                            <p>For the selected month</p>
+                        </div>
+
+                        <div id="comparisonChart" class="comparison-chart" role="img"
+                            aria-label="Monthly income compared with expenses"></div>
+
+                        <div class="chart-legend">
+                            <span>
+                                <i class="legend-dot income-dot"></i>
+                                Income
+                            </span>
+
+                            <span>
+                                <i class="legend-dot expense-dot"></i>
+                                Expenses
+                            </span>
+                        </div>
+
+                    </article>
+
+                    <article class="chart-card">
+
+                        <div class="chart-heading">
+                            <h3>Where money goes</h3>
+                            <p>Expenses grouped by category</p>
+                        </div>
+
+                        <div id="categoryChart" class="category-chart" role="img"
+                            aria-label="Expense totals by category"></div>
+
+                    </article>
+
+                </div>
+
+            </section>
+            <section class="panel">
+
+                <div class="section-heading">
+                    <div>
+                        <p class="eyebrow">HISTORY</p>
+                        <h2>Your transactions</h2>
+
+                        <p class="section-description">
+                            Search, filter, edit, or delete transactions.
+                        </p>
+                    </div>
+
+                    <span id="transactionCount" class="count-pill">
+                        0 transactions
+                    </span>
+                </div>
+
+                <div class="filter-grid">
+
+                    <label class="field" for="transactionFilter">
+                        Type
+
+                        <select id="transactionFilter">
+                            <option value="all">All types</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </label>
+
+                    <label class="field" for="categoryFilter">
+                        Category
+
+                        <select id="categoryFilter">
+                            <option value="all">All categories</option>
+                        </select>
+                    </label>
+
+                    <label class="field field-wide" for="searchInput">
+                        Search description
+
+                        <input id="searchInput" type="search" placeholder="Search transactions...">
+                    </label>
+
+                </div>
+
+                <ul id="transactionList" class="transaction-list" aria-label="Transaction history"></ul>
+
+            </section>
+
+            <p class="privacy-note">
+                Your transactions are stored in this browser on this device.
+                Export a CSV backup to keep a separate copy.
+            </p>
+
+        </main>
+
+        <footer>
+            Expense Tracker · Personal finance, made clearer.
+        </footer>
+
+    </div>
+
+</body>
+
+</html>
